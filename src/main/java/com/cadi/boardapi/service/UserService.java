@@ -1,7 +1,9 @@
 package com.cadi.boardapi.service;
 
+import com.cadi.boardapi.dto.User;
 import com.cadi.boardapi.mapper.UserMapper;
 import com.cadi.boardapi.model.DefaultRes;
+import com.cadi.boardapi.model.SignInReq;
 import com.cadi.boardapi.model.SignUpReq;
 import com.cadi.boardapi.util.PasswordUtil;
 import com.cadi.boardapi.util.ResponseMessage;
@@ -13,8 +15,11 @@ public class UserService {
 
     private final UserMapper userMapper;
 
-    public UserService(UserMapper userMapper) {
+    private final JwtService jwtService;
+
+    public UserService(UserMapper userMapper, JwtService jwtService) {
         this.userMapper = userMapper;
+        this.jwtService = jwtService;
     }
 
     public DefaultRes signUp(final SignUpReq signUpReq) {
@@ -29,4 +34,16 @@ public class UserService {
         return new DefaultRes(StatusCode.CREATED, ResponseMessage.CREATED_USER);
     }
 
+    public DefaultRes singIn(final SignInReq signInReq) {
+        PasswordUtil passwordUtil = new PasswordUtil();
+        signInReq.setPassword(passwordUtil.encryptSHA256(signInReq.getPassword()));
+        final User user = userMapper.signIn(signInReq.getId(), signInReq.getPassword());
+
+        if(user == null) {
+            return new DefaultRes(StatusCode.UNAUTHORIZED, ResponseMessage.LOGIN_FAIL);
+        }
+        // JWT 생성
+        final JwtService.TokenRes tokenDto = new JwtService.TokenRes(jwtService.createJwtToken(user.getUser_idx()));
+        return DefaultRes.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, tokenDto);
+    }
 }
