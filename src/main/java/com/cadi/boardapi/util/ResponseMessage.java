@@ -13,5 +13,7 @@ public class ResponseMessage {
     public static final String DELETE_USER = "회원 탈퇴 성공";
     public static final String INTERNAL_SERVER_ERROR = "서버 내부 에러";
     public static final String DB_ERROR = "데이터베이스 에러";
+    public static final String FAIL_BOARD_CREATED = "게시글 등록 실패";
+    public static final String SUCCESS_BOARD_CREATED = "게시글 등록 성공";
 
 }
