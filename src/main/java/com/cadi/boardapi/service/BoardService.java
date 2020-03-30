@@ -45,4 +45,13 @@ public class BoardService {
         }
     }
 
+    public DefaultRes getBoardList () {
+        try {
+            return new DefaultRes(StatusCode.OK, ResponseMessage.SUCCESS_GET_BOARD_LIST, boardMapper.getBoardList());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new DefaultRes(StatusCode.BAD_REQUEST, ResponseMessage.FAIL_GET_BOARD_LIST);
+        }
+    }
+
 }
