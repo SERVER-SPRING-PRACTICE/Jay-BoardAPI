@@ -1,6 +1,7 @@
 package com.cadi.boardapi.controller;
 
 import com.cadi.boardapi.model.DefaultRes;
+import com.cadi.boardapi.model.SignInReq;
 import com.cadi.boardapi.model.SignUpReq;
 import com.cadi.boardapi.service.UserService;
 import com.cadi.boardapi.util.ResponseMessage;
@@ -33,6 +34,16 @@ public class UserController {
     public ResponseEntity signUp (@RequestBody SignUpReq signUpReq) {
         try {
             return new ResponseEntity(userService.signUp(signUpReq), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("signin")
+    public ResponseEntity signIn (@RequestBody SignInReq signInReq) {
+        try {
+            return new ResponseEntity(userService.singIn(signInReq), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
