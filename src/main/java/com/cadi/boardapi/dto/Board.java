@@ -2,16 +2,12 @@ package com.cadi.boardapi.dto;
 
 import lombok.Data;
 
-import java.util.List;
 
 @Data
-public class Boards {
+public class Board {
 
-    private List<Item> BoardList;
-
-    private class Item {
         private String title;
         private String content;
-    }
+        private String board_image;
 
 }
