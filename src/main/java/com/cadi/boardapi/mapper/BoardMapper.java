@@ -11,8 +11,8 @@ import java.util.List;
 @Mapper
 public interface BoardMapper {
 
-    @Insert("INSERT INTO board(title, content, board_image) VALUES (#{title},#{content},#{image})")
-    void postBoard(@Param("title") String title, @Param("content") String content, @Param("image") String image);
+    @Insert("INSERT INTO board(title, content, board_image, user_idx) VALUES (#{title}, #{content}, #{image}, #{user_idx})")
+    void postBoard(@Param("title") String title, @Param("content") String content, @Param("image") String image, @Param("user_idx") int user_idx);
 
     @Select("SELECT title, content, board_image FROM board")
     List<Board> getBoardList();
