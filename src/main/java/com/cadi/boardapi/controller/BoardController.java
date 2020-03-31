@@ -27,8 +27,7 @@ public class BoardController {
     }
 
     @PostMapping("board")
-    public ResponseEntity postBoard(BoardReq boardReq, @RequestPart(value = "images", required = false) final MultipartFile[] images) {
-
+    public ResponseEntity postBoard(BoardReq boardReq, @RequestHeader(value = "token") String token, @RequestPart(value = "images", required = false) final MultipartFile[] images) {
         try {
             if(images != null) {
                 List<MultipartFile> files = new ArrayList<>();
@@ -37,7 +36,7 @@ public class BoardController {
                 }
                 boardReq.setImages(files);
             }
-            return new ResponseEntity(boardService.postBoard(boardReq), HttpStatus.OK);
+            return new ResponseEntity(boardService.postBoard(boardReq, token), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
             return new ResponseEntity(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
