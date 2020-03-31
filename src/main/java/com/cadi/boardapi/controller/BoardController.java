@@ -52,4 +52,14 @@ public class BoardController {
             return new ResponseEntity(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/board/{board_idx}")
+    public ResponseEntity getBoard(@PathVariable("board_idx") int board_idx) {
+        try {
+            return new ResponseEntity(boardService.getBoard(board_idx), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity(FAIL_DEFAULT_RES, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
