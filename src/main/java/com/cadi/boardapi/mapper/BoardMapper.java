@@ -17,5 +17,7 @@ public interface BoardMapper {
     @Select("SELECT title, content, board_image FROM board")
     List<Board> getBoardList();
 
+    @Select("SELECT title, content, board_image FROM board WHERE board_idx = #{board_idx}")
+    Board getBoard(@Param("board_idx") int board_idx);
 
 }
