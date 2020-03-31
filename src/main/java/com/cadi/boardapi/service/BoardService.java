@@ -20,13 +20,21 @@ public class BoardService {
 
     private final BoardMapper boardMapper;
 
-    public BoardService(S3FileUploadService s3FileUploadService, BoardMapper boardMapper) {
+    private final JwtService jwtService;
+
+    public BoardService(S3FileUploadService s3FileUploadService, BoardMapper boardMapper, JwtService jwtService) {
         this.s3FileUploadService = s3FileUploadService;
         this.boardMapper = boardMapper;
+        this.jwtService = jwtService;
     }
 
-    public DefaultRes postBoard (BoardReq boardReq) {
+    public DefaultRes postBoard (BoardReq boardReq, String token) {
         try {
+            JwtService.Token decodedToken = jwtService.decode(token);
+            if(decodedToken == null) {
+                return new DefaultRes(StatusCode.UNAUTHORIZED, ResponseMessage.FAIL_BOARD_CREATED);
+            }
+
             if(boardReq.getImages() != null) {
                 List<String> urlArray = new ArrayList<String>();
                 for(MultipartFile file : boardReq.getImages()) {
@@ -35,7 +43,7 @@ public class BoardService {
                 boardReq.setImagesUrl(urlArray);
             }
             for(String url : boardReq.getImagesUrl()) {
-                boardMapper.postBoard(boardReq.getTitle(), boardReq.getContent(), url);
+                boardMapper.postBoard(boardReq.getTitle(), boardReq.getContent(), url, decodedToken.getUser_idx());
             }
 
             return new DefaultRes(StatusCode.CREATED, ResponseMessage.SUCCESS_BOARD_CREATED);
